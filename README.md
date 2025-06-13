@@ -6,7 +6,7 @@
 [![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Package manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
-A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through both SSE (currently no auth) and STDIO interfaces.
+A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through both SSE (with optional API key authentication) and STDIO interfaces.
 
 > [!WARNING]
 > This repository is a learning project focused on MetricFlow integration with MCP. For production use cases, please refer to the official [dbt-mcp](https://github.com/dbt-labs/dbt-mcp) implementation by dbt Labs.
@@ -62,6 +62,10 @@ MF_TMP_DIR=/tmp
 # SSE server configuration (optional)
 MCP_HOST=localhost
 MCP_PORT=8000
+
+# API key authentication for SSE mode (optional)
+MCP_API_KEY=your-secret-api-key
+MCP_REQUIRE_AUTH=false
 ```
 
 ## Running the MCP Server
@@ -106,6 +110,35 @@ uv run python src/main_sse.py
 
 The server will start on `http://localhost:8000` (or the host/port specified in your environment variables).
 
+#### API Key Authentication
+
+The SSE server supports optional API key authentication. To enable authentication:
+
+1. Set the required environment variables:
+   ```bash
+   export MCP_API_KEY="your-secret-api-key"
+   export MCP_REQUIRE_AUTH="true"
+   ```
+
+2. Access authenticated endpoints by including the API key in the Authorization header:
+   ```bash
+   # Health check (no authentication required)
+   curl http://localhost:8000/health
+
+   # SSE endpoint (requires authentication when enabled)
+   curl -H "Authorization: Bearer your-secret-api-key" http://localhost:8000/sse
+   ```
+
+**Authentication Configuration:**
+- `MCP_API_KEY`: The secret API key for authentication (required when `MCP_REQUIRE_AUTH=true`)
+- `MCP_REQUIRE_AUTH`: Enable/disable authentication (`true`, `1`, `yes`, `on` to enable; default: `false`)
+
+**Security Notes:**
+- The `/health` endpoint is always accessible without authentication for monitoring purposes
+- The `/sse` endpoint requires authentication when `MCP_REQUIRE_AUTH=true`
+- API keys are case-sensitive and support special characters
+- Store API keys securely and avoid committing them to version control
+
 ## Available Tools
 
 The MCP server exposes the following MetricFlow CLI tools:
@@ -129,6 +162,7 @@ src/
 ├── config/
 │   └── config.py              # Configuration management
 ├── server/
+│   ├── auth.py                # API key authentication
 │   ├── sse_server.py          # SSE server implementation
 │   └── stdio_server.py        # STDIO server implementation
 ├── tools/
@@ -166,5 +200,3 @@ uv run ruff check .
 
 ## TODO
 - Test STDIO mode
-- Add API KEY auth to SSE mode
-- Publish package
