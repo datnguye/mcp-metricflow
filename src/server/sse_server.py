@@ -10,6 +10,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.sse import SseServerTransport
 
 from src.config.config import load_mf_config
+from src.server.auth import Authenticated
 from src.tools.cli_tools import register_mf_cli_tools
 from src.utils.logger import logger
 
@@ -27,12 +28,24 @@ async def app_lifespan(app: FastAPI) -> AsyncIterator[None]:
         config = load_mf_config()
         logger.info("Loaded config: %s", config)
 
+        # Store config in app state for authentication
+        app.state.config = config
+
         # Initialize MCP server and store in app state
         mcp_server = FastMCP(name="mf")
         app.state.mf_mcp = mcp_server
 
         # Register tools based on configuration
         await _register_tools(mcp_server, config)
+
+        # Log authentication configuration
+        if config.require_auth:
+            if config.api_key:
+                logger.info("API key authentication enabled")
+            else:
+                logger.warning("Authentication required but no API key configured")
+        else:
+            logger.info("API key authentication disabled")
 
         logger.info("MCP server started successfully")
         yield
@@ -68,7 +81,7 @@ async def health() -> dict[str, str]:
 
 
 @app.get("/sse")
-async def handle_sse(request: Request) -> None:
+async def handle_sse(request: Request, _: Authenticated) -> None:
     """Handle SSE connections for MCP communication."""
     logger.info("New SSE connection established")
 
