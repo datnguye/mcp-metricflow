@@ -7,7 +7,7 @@
 
 A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through both SSE (currently no auth) and STDIO interfaces.
 
-> [!IMPORTANT]
+> [!WARNING]
 > This repository is a learning project focused on MetricFlow integration with MCP. For production use cases, please refer to the official [dbt-mcp](https://github.com/dbt-labs/dbt-mcp) implementation by dbt Labs.
 
 ## Table of Contents
@@ -35,7 +35,7 @@ This project provides a Model Context Protocol (MCP) server that wraps MetricFlo
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/datnguye/mcp-metricflow.git
 cd mcp-metricflow
 
 # Install dependencies
