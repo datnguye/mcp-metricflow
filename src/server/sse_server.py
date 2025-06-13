@@ -3,7 +3,6 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from importlib.metadata import version
-import os
 from typing import Any
 
 from fastapi import FastAPI, Request

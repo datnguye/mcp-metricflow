@@ -13,7 +13,7 @@ logger = configure_logging()
 
 if __name__ == "__main__":
     # Run in SSE mode
-    host = os.environ.get("MCP_HOST", "0.0.0.0")
+    host = os.environ.get("MCP_HOST", "0.0.0.0")  # nosec B104
     port = int(os.environ.get("MCP_PORT", "8000"))
 
     logger.info("=" * 60)

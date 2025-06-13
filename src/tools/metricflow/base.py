@@ -1,7 +1,7 @@
 """Base functionality for MetricFlow tools."""
 
 import os
-import subprocess
+import subprocess  # nosec B404
 
 from src.config.config import MfCliConfig
 from src.utils.logger import logger
@@ -40,7 +40,7 @@ def run_mf_command(command: list[str], config: MfCliConfig) -> tuple[str, str]:
     env = os.environ.copy()
     env["DBT_PROFILES_DIR"] = config.profiles_dir
 
-    process = subprocess.Popen(
+    process = subprocess.Popen(  # nosec B603
         args=[config.mf_path, *full_command],
         cwd=config.project_dir,
         env=env,

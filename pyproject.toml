@@ -22,6 +22,14 @@ dev = [
     "poethepoet>=0.34.0",
     "dbt-snowflake>=1.8.0",
 ]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-sugar>=1.0.0",
+    "coverage[toml]>=7.6.0",
+]
 
 [build-system]
 requires = ["pdm-backend>=2.3.3", "setuptools-scm>=8.3.1"]
@@ -88,11 +96,56 @@ suppress-dummy-args = true
 [tool.ruff.lint.flake8-type-checking]
 strict = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"
+addopts = [
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+    "--cov-fail-under=100",
+    "-v",
+]
+filterwarnings = [
+    "ignore:coroutine.*was never awaited:RuntimeWarning",
+    "ignore::RuntimeWarning:unittest.mock",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/__init__.py", "*/main_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B108", "B404"]
+
 [tool.poe.tasks]
 # Setup tasks
-setup = "uv sync --all-extras"
-setup-hooks = "pre-commit install"
+setup = { cmd = "uv sync --all-extras", help = "Install all dependencies" }
+setup-hooks = { cmd = "pre-commit install", help = "Install pre-commit hooks" }
 
 # Code quality tasks
-format = "uv run ruff format mcp-metricflow"
-lint = "uv run ruff check mcp-metricflow"
+format = { cmd = "uv run ruff format src tests", help = "Format code with ruff" }
+lint = { cmd = "uv run ruff check src tests", help = "Lint code with ruff" }
+
+# Testing tasks
+test = { cmd = "uv run pytest", help = "Run tests" }
+test-cov = { cmd = "uv run pytest --cov=src --cov-report=term-missing --cov-report=html", help = "Run tests with coverage report" }
+test-cov-fail = { cmd = "uv run pytest --cov=src --cov-report=term-missing --cov-report=html --cov-fail-under=100", help = "Run tests with coverage and fail if under 100%" }
