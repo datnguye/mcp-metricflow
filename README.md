@@ -203,4 +203,7 @@ Finally, super thanks to our *Contributors*:
 
 ## TODO
 - Test STDIO mode
+
+## GitAds Sponsored
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=datnguye/mcp-metricflow@github)](https://gitads.dev/v1/ad-track?source=datnguye/mcp-metricflow@github)
 <!-- GitAds-Verify: HRQ1S4W8N5U676OK6MBIJNH3EPKCGG64 -->
