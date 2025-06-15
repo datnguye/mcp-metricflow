@@ -50,10 +50,9 @@ jobs:
           uv run coverage xml -o coverage.xml
 
       - name: Post coverage report
-        uses: orgoro/coverage@v3.1
+        uses: orgoro/coverage@v3.2
         with:
             coverageFile: coverage.xml
             token: ${{ secrets.GITHUB_TOKEN }}
-            thresholdAll: 0.8
-            thresholdNew: 0.8
-            comment: true
+            thresholdAll: 1
+            thresholdNew: 1
