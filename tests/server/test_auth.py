@@ -63,12 +63,15 @@ class TestVerifyApiKey:
     def test_verify_api_key_auth_required_no_credentials(self):
         """Test API key verification when auth is required but no credentials provided."""
         mock_request = Mock()
+        mock_request.client.host = "127.0.0.1"
+        mock_request.headers.get.return_value = "test-agent"
+        mock_request.url = "http://test.com/sse"
         mock_config = MfCliConfig(
             project_dir="/test",
             profiles_dir="/test",
             mf_path="test",
             tmp_dir="/test",
-            api_key="valid-key",
+            api_key="a" * 32,  # Valid format API key
             require_auth=True
         )
         mock_request.app.state.config = mock_config
@@ -78,17 +81,24 @@ class TestVerifyApiKey:
 
         assert exc_info.value.status_code == status.HTTP_401_UNAUTHORIZED
         assert exc_info.value.detail == "API key required"
-        assert exc_info.value.headers == {"WWW-Authenticate": "Bearer"}
+        assert exc_info.value.headers == {
+            "WWW-Authenticate": "Bearer",
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache"
+        }
 
     def test_verify_api_key_auth_required_invalid_key(self):
         """Test API key verification when auth is required and invalid key is provided."""
         mock_request = Mock()
+        mock_request.client.host = "127.0.0.1"
+        mock_request.headers.get.return_value = "test-agent"
+        mock_request.url = "http://test.com/sse"
         mock_config = MfCliConfig(
             project_dir="/test",
             profiles_dir="/test",
             mf_path="test",
             tmp_dir="/test",
-            api_key="valid-key",
+            api_key="a" * 32,  # Valid format API key
             require_auth=True
         )
         mock_request.app.state.config = mock_config
@@ -103,7 +113,11 @@ class TestVerifyApiKey:
 
         assert exc_info.value.status_code == status.HTTP_401_UNAUTHORIZED
         assert exc_info.value.detail == "Invalid API key"
-        assert exc_info.value.headers == {"WWW-Authenticate": "Bearer"}
+        assert exc_info.value.headers == {
+            "WWW-Authenticate": "Bearer",
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache"
+        }
 
     def test_verify_api_key_auth_required_valid_key(self):
         """Test API key verification when auth is required and valid key is provided."""
@@ -113,14 +127,14 @@ class TestVerifyApiKey:
             profiles_dir="/test",
             mf_path="test",
             tmp_dir="/test",
-            api_key="valid-key",
+            api_key="a" * 32,  # Valid format API key
             require_auth=True
         )
         mock_request.app.state.config = mock_config
 
         valid_credentials = HTTPAuthorizationCredentials(
             scheme="Bearer",
-            credentials="valid-key"
+            credentials="a" * 32  # Valid format API key
         )
 
         result = verify_api_key(mock_request, valid_credentials)

@@ -20,6 +20,8 @@ class TestAppLifespan:
         """Test successful app lifespan management."""
         # Mock configuration
         mock_config = Mock()
+        mock_config.require_auth = False  # Disable auth for this test
+        mock_config.api_key = None
         mock_load_config.return_value = mock_config
 
         # Mock FastMCP instance
@@ -78,8 +80,8 @@ class TestAppLifespan:
         """Test app lifespan with authentication required but no API key configured."""
         # Mock configuration with authentication required but no API key
         mock_config = Mock()
-        mock_config.require_auth = True
         mock_config.api_key = None
+        mock_config.require_auth = True  # Enable auth to trigger validation error
         mock_load_config.return_value = mock_config
 
         # Mock FastMCP
@@ -93,12 +95,10 @@ class TestAppLifespan:
         mock_app = Mock()
         mock_app.state = Mock()
 
-        # Test lifespan
-        async with app_lifespan(mock_app):
-            pass
-
-        # Verify warning logging for missing API key
-        mock_logger.warning.assert_called_with("Authentication required but no API key configured")
+        # Test lifespan - should raise ValueError for invalid auth config
+        with pytest.raises(ValueError, match="API key is required when authentication is enabled"):
+            async with app_lifespan(mock_app):
+                pass
 
     @pytest.mark.asyncio
     @patch('src.server.sse_server.load_mf_config')
@@ -109,6 +109,8 @@ class TestAppLifespan:
         """Test app lifespan with tool registration error."""
         # Mock configuration
         mock_config = Mock()
+        mock_config.require_auth = False  # Disable auth for this test
+        mock_config.api_key = None
         mock_load_config.return_value = mock_config
 
         # Mock FastMCP instance

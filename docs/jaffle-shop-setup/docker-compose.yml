@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mcp-metricflow:
+    build: .
+    container_name: mcp-metricflow-stdio
+    volumes:
+      # Mount the dbt project
+      - ./:/dbt-project:ro
+      # Mount dbt profiles
+      - ~/.dbt:/root/.dbt:ro
+    environment:
+      - DBT_PROJECT_DIR=/dbt-project
+      - DBT_PROFILES_DIR=/root/.dbt
+      - MF_PATH=mf
+      - MF_TMP_DIR=/tmp
+    stdin_open: true
+    tty: true
+    command: ["uv", "run", "python", "src/main_stdio.py"]
