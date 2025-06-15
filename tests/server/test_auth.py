@@ -1,7 +1,7 @@
 """Tests for the authentication module."""
 
 import pytest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 from fastapi import HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 
@@ -230,3 +230,42 @@ class TestVerifyApiKey:
 
         result = verify_api_key(mock_request, valid_credentials)
         assert result is True
+
+    @patch('src.server.auth.time')
+    def test_verify_api_key_rate_limit_exceeded(self, mock_time):
+        """Test API key verification when rate limit is exceeded."""
+        from src.server.auth import request_counts, MAX_REQUESTS, TIME_WINDOW
+
+        # Clear any existing rate limit data
+        request_counts.clear()
+
+        mock_request = Mock()
+        mock_request.client.host = "192.168.1.100"
+        mock_request.headers.get.return_value = "test-agent"
+        mock_request.url = "http://test.com/sse"
+        mock_config = MfCliConfig(
+            project_dir="/test",
+            profiles_dir="/test",
+            mf_path="test",
+            tmp_dir="/test",
+            api_key="a" * 32,
+            require_auth=True
+        )
+        mock_request.app.state.config = mock_config
+
+        # Set up time mock - current time is 1000
+        current_time = 1000.0
+        mock_time.return_value = current_time
+
+        # Pre-populate with MAX_REQUESTS failed attempts within the time window
+        client_ip = "192.168.1.100"
+        for _ in range(MAX_REQUESTS):
+            request_counts[client_ip].append(current_time - (TIME_WINDOW - 10))  # Recent attempts
+
+        # Now attempt authentication - should trigger rate limit
+        with pytest.raises(HTTPException) as exc_info:
+            verify_api_key(mock_request, None)
+
+        assert exc_info.value.status_code == status.HTTP_429_TOO_MANY_REQUESTS
+        assert "Too many failed authentication attempts" in exc_info.value.detail
+        assert exc_info.value.headers == {"Retry-After": str(TIME_WINDOW)}

@@ -105,6 +105,68 @@ class TestAppLifespan:
     @patch('src.server.sse_server._register_tools')
     @patch('src.server.sse_server.FastMCP')
     @patch('src.server.sse_server.logger')
+    async def test_app_lifespan_auth_enabled_with_key(self, mock_logger, mock_fastmcp, mock_register_tools, mock_load_config):
+        """Test app lifespan with authentication enabled and API key configured."""
+        # Mock configuration with authentication enabled and API key present
+        mock_config = Mock()
+        mock_config.api_key = "a" * 32  # Valid API key
+        mock_config.require_auth = True
+        mock_load_config.return_value = mock_config
+
+        # Mock FastMCP
+        mock_mcp_instance = Mock()
+        mock_fastmcp.return_value = mock_mcp_instance
+
+        # Mock register tools
+        mock_register_tools.return_value = None
+
+        # Create mock app
+        mock_app = Mock()
+        mock_app.state = Mock()
+
+        # Test lifespan with valid auth config
+        async with app_lifespan(mock_app):
+            # Verify auth logging
+            mock_logger.info.assert_any_call("API key authentication enabled")
+
+    @pytest.mark.asyncio
+    @patch('src.server.sse_server.load_mf_config')
+    @patch('src.server.sse_server._register_tools')
+    @patch('src.server.sse_server.FastMCP')
+    @patch('src.server.sse_server.logger')
+    @patch('src.server.sse_server.validate_auth_config')  # Mock validation to prevent early failure
+    async def test_app_lifespan_auth_enabled_no_key_logging(self, mock_validate, mock_logger, mock_fastmcp, mock_register_tools, mock_load_config):
+        """Test app lifespan authentication logging when auth is required but no API key configured."""
+        # Mock configuration with authentication required but no API key
+        mock_config = Mock()
+        mock_config.api_key = None  # No API key
+        mock_config.require_auth = True
+        mock_load_config.return_value = mock_config
+
+        # Mock validation to not raise error (we're testing logging, not validation)
+        mock_validate.return_value = None
+
+        # Mock FastMCP
+        mock_mcp_instance = Mock()
+        mock_fastmcp.return_value = mock_mcp_instance
+
+        # Mock register tools
+        mock_register_tools.return_value = None
+
+        # Create mock app
+        mock_app = Mock()
+        mock_app.state = Mock()
+
+        # Test lifespan - should log warning about missing API key
+        async with app_lifespan(mock_app):
+            # Verify warning logging for missing API key
+            mock_logger.warning.assert_any_call("Authentication required but no API key configured")
+
+    @pytest.mark.asyncio
+    @patch('src.server.sse_server.load_mf_config')
+    @patch('src.server.sse_server._register_tools')
+    @patch('src.server.sse_server.FastMCP')
+    @patch('src.server.sse_server.logger')
     async def test_app_lifespan_register_tools_error(self, mock_logger, mock_fastmcp, mock_register_tools, mock_load_config):
         """Test app lifespan with tool registration error."""
         # Mock configuration
