@@ -74,6 +74,37 @@ class TestAppLifespan:
     @patch('src.server.sse_server._register_tools')
     @patch('src.server.sse_server.FastMCP')
     @patch('src.server.sse_server.logger')
+    async def test_app_lifespan_auth_warning(self, mock_logger, mock_fastmcp, mock_register_tools, mock_load_config):
+        """Test app lifespan with authentication required but no API key configured."""
+        # Mock configuration with authentication required but no API key
+        mock_config = Mock()
+        mock_config.require_auth = True
+        mock_config.api_key = None
+        mock_load_config.return_value = mock_config
+
+        # Mock FastMCP
+        mock_mcp_instance = Mock()
+        mock_fastmcp.return_value = mock_mcp_instance
+
+        # Mock register tools
+        mock_register_tools.return_value = None
+
+        # Create mock app
+        mock_app = Mock()
+        mock_app.state = Mock()
+
+        # Test lifespan
+        async with app_lifespan(mock_app):
+            pass
+
+        # Verify warning logging for missing API key
+        mock_logger.warning.assert_called_with("Authentication required but no API key configured")
+
+    @pytest.mark.asyncio
+    @patch('src.server.sse_server.load_mf_config')
+    @patch('src.server.sse_server._register_tools')
+    @patch('src.server.sse_server.FastMCP')
+    @patch('src.server.sse_server.logger')
     async def test_app_lifespan_register_tools_error(self, mock_logger, mock_fastmcp, mock_register_tools, mock_load_config):
         """Test app lifespan with tool registration error."""
         # Mock configuration
@@ -172,7 +203,7 @@ class TestHandleSse:
         mock_transport.connect_sse = mock_connect_sse
 
         # Handle SSE
-        await handle_sse(mock_request)
+        await handle_sse(mock_request, True)
 
         # Verify MCP server run was called
         mock_mcp_server._mcp_server.run.assert_called_once()
@@ -190,7 +221,7 @@ class TestHandleSse:
         mock_request = Mock()
         mock_request.app.state = Mock(spec=[])  # Empty spec means no attributes
 
-        result = await handle_sse(mock_request)
+        result = await handle_sse(mock_request, True)
 
         assert result is None
         mock_logger.error.assert_called_with("MCP server not initialized")
@@ -214,7 +245,7 @@ class TestHandleSse:
         # Mock transport connection with exception
         mock_transport.connect_sse.side_effect = Exception("Connection error")
 
-        result = await handle_sse(mock_request)
+        result = await handle_sse(mock_request, True)
 
         assert result is None
         mock_logger.error.assert_called_with("Error handling SSE connection: %s", mock_transport.connect_sse.side_effect)

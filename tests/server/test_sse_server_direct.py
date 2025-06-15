@@ -36,7 +36,7 @@ class TestSseServerDirect:
         mock_request.app.state = Mock(spec=[])  # Empty spec means no attributes
 
         with patch('src.server.sse_server.logger') as mock_logger:
-            result = await handle_sse(mock_request)
+            result = await handle_sse(mock_request, True)
 
             assert result is None
             mock_logger.error.assert_called_with("MCP server not initialized")
@@ -66,7 +66,7 @@ class TestSseServerDirect:
             mock_transport.connect_sse = mock_connect_sse
 
             with patch('src.server.sse_server.logger') as mock_logger:
-                await handle_sse(mock_request)
+                await handle_sse(mock_request, True)
 
                 # Verify the MCP server run was called
                 mock_mcp_server._mcp_server.run.assert_called_once()
