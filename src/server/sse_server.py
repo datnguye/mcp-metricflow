@@ -10,7 +10,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.sse import SseServerTransport
 
 from src.config.config import load_mf_config
-from src.server.auth import Authenticated
+from src.server.auth import Authenticated, validate_auth_config
 from src.tools.cli_tools import register_mf_cli_tools
 from src.utils.logger import logger
 
@@ -27,6 +27,9 @@ async def app_lifespan(app: FastAPI) -> AsyncIterator[None]:
         # Load configuration
         config = load_mf_config()
         logger.info("Loaded config: %s", config)
+
+        # Validate authentication configuration
+        validate_auth_config(config)
 
         # Store config in app state for authentication
         app.state.config = config
