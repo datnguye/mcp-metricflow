@@ -197,8 +197,8 @@ If you've found this tool to be very helpful, please consider giving the reposit
 
 Finally, super thanks to our *Contributors*:
 
-<a href="https://github.com/datnguye/dbterd/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=datnguye/dbterd" />
+<a href="https://github.com/datnguye/mcp-metricflow/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=datnguye/mcp-metricflow" />
 </a>
 
 ## TODO
