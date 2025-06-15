@@ -25,8 +25,6 @@ A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through
       - [API Key Authentication](#api-key-authentication)
   - [Available Tools](#available-tools)
   - [Project Structure](#project-structure)
-  - [Development](#development)
-    - [Code Quality](#code-quality)
   - [Contributing ✨](#contributing-)
   - [TODO](#todo)
 
@@ -186,27 +184,22 @@ src/
 └── main_stdio.py              # STDIO server entry point
 ```
 
-## Development
-
-### Code Quality
-
-The project uses ruff for code formatting and linting:
-
-```bash
-# Format code
-uv run ruff format
-
-# Check code quality
-uv run ruff check .
-```
-
 ## Contributing ✨
 
-"If you've ever wanted to contribute to this tool, and a great cause, now is your chance!"
+If you've ever wanted to contribute to this tool, and a great cause, now is your chance!
 
 See the contributing docs [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
-"If you've found this tool to be very helpful, please consider giving the repository a star, sharing it on social media, or even writing a blog post about it 💌"
+If you've found this tool to be very helpful, please consider giving the repository a star, sharing it on social media, or even writing a blog post about it 💌
+
+[![mcp-metricflow stars](https://img.shields.io/github/stars/datnguye/mcp-metricflow.svg?logo=github&style=for-the-badge&label=Star%20this%20repo)](https://github.com/datnguye/mcp-metricflow)
+[![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?logo=buy-me-a-coffee&logoColor=white&labelColor=ff813f&style=for-the-badge)](https://www.buymeacoffee.com/datnguye)
+
+Finally, super thanks to our *Contributors*:
+
+<a href="https://github.com/datnguye/dbterd/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=datnguye/dbterd" />
+</a>
 
 ## TODO
 - Test STDIO mode
