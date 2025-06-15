@@ -22,10 +22,12 @@ A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through
     - [STDIO Mode (Claude Desktop)](#stdio-mode-claude-desktop)
       - [Claude Desktop Configuration](#claude-desktop-configuration)
     - [SSE Mode](#sse-mode)
+      - [API Key Authentication](#api-key-authentication)
   - [Available Tools](#available-tools)
   - [Project Structure](#project-structure)
   - [Development](#development)
     - [Code Quality](#code-quality)
+  - [Contributing ✨](#contributing-)
   - [TODO](#todo)
 
 ## Overview
@@ -197,6 +199,14 @@ uv run ruff format
 # Check code quality
 uv run ruff check .
 ```
+
+## Contributing ✨
+
+"If you've ever wanted to contribute to this tool, and a great cause, now is your chance!"
+
+See the contributing docs [CONTRIBUTING](CONTRIBUTING.md) for more information.
+
+"If you've found this tool to be very helpful, please consider giving the repository a star, sharing it on social media, or even writing a blog post about it 💌"
 
 ## TODO
 - Test STDIO mode
