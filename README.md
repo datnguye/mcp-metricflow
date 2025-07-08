@@ -71,6 +71,7 @@ For integration with Claude Desktop (or any other MCP Client tool), use STDIO mo
 
 ```bash
 uvx --env-file /path/to/.env mcp-metricflow
+
 ```
 
 Add this configuration to the respective client's config file:

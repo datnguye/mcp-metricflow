@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-mcp-metricflow = "src.main_stdio:main"
+mcp-metricflow = "main.main_stdio:main"
 
 [project.optional-dependencies]
 dev = [
@@ -40,7 +40,6 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 version = {source = "scm"}
-package = false
 
 [tool.ruff]
 line-length = 120
