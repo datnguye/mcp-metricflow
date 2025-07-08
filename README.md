@@ -78,7 +78,7 @@ Add this configuration to the respective client's config file:
 ```json
 {
   "mcpServers": {
-    "dbt-mcp": {
+    "mcp-metricflow": {
       "command": "uvx",
       "args": [
         "--env-file",
