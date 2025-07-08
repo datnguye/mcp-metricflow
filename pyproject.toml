@@ -13,6 +13,9 @@ dependencies = [
     "mcp>=1.3.2",
 ]
 
+[project.scripts]
+mcp-metricflow = "src.main_stdio:main"
+
 [project.optional-dependencies]
 dev = [
     "black>=25.1.0",

@@ -16,11 +16,10 @@ A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through
 - [mcp-metricflow](#mcp-metricflow)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
-  - [Installation](#installation)
+  - [Setup](#setup)
   - [Configuration](#configuration)
   - [Running the MCP Server](#running-the-mcp-server)
-    - [STDIO Mode (Claude Desktop)](#stdio-mode-claude-desktop)
-      - [Claude Desktop Configuration](#claude-desktop-configuration)
+    - [STDIO Mode](#stdio-mode)
     - [SSE Mode](#sse-mode)
       - [API Key Authentication](#api-key-authentication)
   - [Available Tools](#available-tools)
@@ -32,18 +31,14 @@ A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through
 
 This project provides a Model Context Protocol (MCP) server that wraps MetricFlow CLI commands, making them accessible through both Server-Sent Events (SSE) and Standard Input/Output (STDIO) interfaces. It enables seamless integration with Claude Desktop and other MCP-compatible clients.
 
-## Installation
+## Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/datnguye/mcp-metricflow.git
-cd mcp-metricflow
-
-# Install dependencies
-uv sync
+# Install uv at https://docs.astral.sh/uv/getting-started/installation/
 
 # Copy environment template
 cp .env.template .env
+# ...and then jump to # Configuration section to fulfill it
 ```
 
 ## Configuration
@@ -52,7 +47,7 @@ Edit the `.env` file with your specific configuration:
 
 ```bash
 # Required: Path to your dbt project
-DBT_PROJECT_DIR=/path/to/your/dbt/project
+DBT_PROJECT_DIR=/path/to/your/dbt/project e.g. /Users/dat/repos/il/jaffle-shop
 
 # Optional: Other configurations
 DBT_PROFILES_DIR=~/.dbt
@@ -70,31 +65,27 @@ MCP_REQUIRE_AUTH=false
 
 ## Running the MCP Server
 
-### STDIO Mode (Claude Desktop)
+### STDIO Mode
 
-For integration with Claude Desktop, use STDIO mode:
+For integration with Claude Desktop (or any other MCP Client tool), use STDIO mode with the following `uvx` command:
 
 ```bash
-uv run python src/main_stdio.py
+uvx --env-file /path/to/.env mcp-metricflow
 ```
 
-#### Claude Desktop Configuration
-
-Add this to your Claude Desktop MCP configuration:
+Add this configuration to the respective client's config file:
 
 ```json
 {
   "mcpServers": {
-    "metricflow": {
-      "command": "uv",
-      "args": ["run", "python", "/path/to/mcp-metricflow/src/main_stdio.py"],
-      "cwd": "/path/to/mcp-metricflow",
-      "env": {
-        "DBT_PROJECT_DIR": "/path/to/your/dbt/project",
-        "DBT_PROFILES_DIR": "~/.dbt",
-        "MF_PATH": "mf"
-      }
-    }
+    "dbt-mcp": {
+      "command": "uvx",
+      "args": [
+        "--env-file",
+        "<path-to-.env-file>",
+        "mcp-metricflow"
+      ]
+    },
   }
 }
 ```
@@ -203,7 +194,3 @@ Finally, super thanks to our *Contributors*:
 
 ## TODO
 - Test STDIO mode
-
-## GitAds Sponsored
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=datnguye/mcp-metricflow@github)](https://gitads.dev/v1/ad-track?source=datnguye/mcp-metricflow@github)
-<!-- GitAds-Verify: HRQ1S4W8N5U676OK6MBIJNH3EPKCGG64 -->
