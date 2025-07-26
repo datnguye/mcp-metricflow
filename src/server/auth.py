@@ -9,7 +9,7 @@ from typing import Annotated, Any
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.utils.logger import logger
+from utils.logger import logger
 
 # Security scheme for Bearer token authentication
 security = HTTPBearer(auto_error=False)

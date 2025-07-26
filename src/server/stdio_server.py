@@ -6,9 +6,9 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 from mcp.server.stdio import stdio_server
 
-from src.config.config import load_mf_config
-from src.tools.cli_tools import register_mf_cli_tools
-from src.utils.logger import logger
+from config.config import load_mf_config
+from tools.cli_tools import register_mf_cli_tools
+from utils.logger import logger
 
 
 async def _register_tools(mcp_server: FastMCP, config: Any) -> None:

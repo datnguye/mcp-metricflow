@@ -40,6 +40,8 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 version = {source = "scm"}
+[tool.pdm.build]
+package-dir = "src"
 
 [tool.ruff]
 line-length = 120

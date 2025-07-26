@@ -4,8 +4,8 @@ import os
 
 import uvicorn
 
-from src.server.sse_server import app
-from src.utils.logger import configure_logging
+from server.sse_server import app
+from utils.logger import configure_logging
 
 # Configure logging
 logger = configure_logging()

@@ -3,8 +3,8 @@
 import os
 import subprocess  # nosec B404
 
-from src.config.config import MfCliConfig
-from src.utils.logger import logger
+from config.config import MfCliConfig
+from utils.logger import logger
 
 
 def run_mf_command(command: list[str], config: MfCliConfig) -> tuple[str, str]:

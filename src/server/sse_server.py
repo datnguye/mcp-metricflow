@@ -9,10 +9,10 @@ from fastapi import FastAPI, Request
 from mcp.server.fastmcp import FastMCP
 from mcp.server.sse import SseServerTransport
 
-from src.config.config import load_mf_config
-from src.server.auth import Authenticated, validate_auth_config
-from src.tools.cli_tools import register_mf_cli_tools
-from src.utils.logger import logger
+from config.config import load_mf_config
+from server.auth import Authenticated, validate_auth_config
+from tools.cli_tools import register_mf_cli_tools
+from utils.logger import logger
 
 # Global variables
 transport = SseServerTransport("/messages/")

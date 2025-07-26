@@ -4,8 +4,8 @@ import csv
 import json
 import os
 
-from src.config.config import MfCliConfig
-from src.tools.metricflow.base import run_mf_command
+from config.config import MfCliConfig
+from tools.metricflow.base import run_mf_command
 
 
 def query(session_id: str, metrics: list[str], config: MfCliConfig, **kwargs) -> tuple[str, str]:

@@ -2,15 +2,15 @@
 
 from mcp.server.fastmcp import FastMCP
 
-from src.config.config import MfCliConfig
-from src.tools.metricflow.health_checks import health_checks
-from src.tools.metricflow.list_dimension_values import list_dimension_values
-from src.tools.metricflow.list_dimensions import list_dimensions
-from src.tools.metricflow.list_entities import list_entities
-from src.tools.metricflow.list_metrics import list_metrics
-from src.tools.metricflow.query import query
-from src.tools.metricflow.validate_configs import validate_configs
-from src.utils.prompts import load_prompt
+from config.config import MfCliConfig
+from tools.metricflow.health_checks import health_checks
+from tools.metricflow.list_dimension_values import list_dimension_values
+from tools.metricflow.list_dimensions import list_dimensions
+from tools.metricflow.list_entities import list_entities
+from tools.metricflow.list_metrics import list_metrics
+from tools.metricflow.query import query
+from tools.metricflow.validate_configs import validate_configs
+from utils.prompts import load_prompt
 
 
 def register_mf_cli_tools(mf_mcp: FastMCP, config: MfCliConfig) -> None:
