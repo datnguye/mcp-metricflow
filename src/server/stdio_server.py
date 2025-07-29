@@ -7,6 +7,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.server.stdio import stdio_server
 
 from config.config import load_mf_config
+from server import VERSION
 from tools.cli_tools import register_mf_cli_tools
 from utils.logger import logger
 
@@ -51,6 +52,7 @@ def main() -> None:
     """Entry point for STDIO server."""
     logger.info("=" * 60)
     logger.info("Starting MetricFlow MCP Server (STDIO mode)")
+    logger.info(f"Version: {VERSION}")
     logger.info("=" * 60)
 
     asyncio.run(run_stdio_server())
