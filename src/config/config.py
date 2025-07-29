@@ -40,8 +40,8 @@ def load_mf_config() -> MfCliConfig:
     """
     load_dotenv()
 
-    project_dir = os.path.abspath(os.environ.get("DBT_PROJECT_DIR")) if os.environ.get("DBT_PROJECT_DIR") else None
-    profiles_dir = os.path.abspath(os.environ.get("DBT_PROFILES_DIR", os.path.expanduser("~/.dbt")))
+    project_dir = os.environ.get("DBT_PROJECT_DIR")
+    profiles_dir = os.environ.get("DBT_PROFILES_DIR", os.path.expanduser("~/.dbt"))
     mf_path = os.environ.get("MF_PATH", "mf")
     tmp_dir = os.environ.get("MF_TMP_DIR", os.path.join(os.path.expanduser("~/.dbt"), "metricflow"))
 
