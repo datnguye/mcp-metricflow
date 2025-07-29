@@ -19,13 +19,12 @@ A Model Context Protocol (MCP) server that provides MetricFlow CLI tools through
   - [Setup](#setup)
   - [Configuration](#configuration)
   - [Running the MCP Server](#running-the-mcp-server)
-    - [STDIO Mode](#stdio-mode)
-    - [SSE Mode](#sse-mode)
+    - [STDIO Mode ✅](#stdio-mode-)
+    - [SSE Mode 🚧](#sse-mode-)
       - [API Key Authentication](#api-key-authentication)
   - [Available Tools](#available-tools)
   - [Project Structure](#project-structure)
   - [Contributing ✨](#contributing-)
-  - [TODO](#todo)
 
 ## Overview
 
@@ -50,9 +49,9 @@ Edit the `.env` file with your specific configuration:
 DBT_PROJECT_DIR=/path/to/your/dbt/project e.g. /Users/dat/repos/il/jaffle-shop
 
 # Optional: Other configurations
-DBT_PROFILES_DIR=~/.dbt
+DBT_PROFILES_DIR=/path/to/.dbt
 MF_PATH=mf
-MF_TMP_DIR=/tmp
+MF_TMP_DIR=/path/to/tmp
 
 # SSE server configuration (optional)
 MCP_HOST=localhost
@@ -65,13 +64,20 @@ MCP_REQUIRE_AUTH=false
 
 ## Running the MCP Server
 
-### STDIO Mode
+### STDIO Mode ✅
 
 For integration with Claude Desktop (or any other MCP Client tool), use STDIO mode with the following `uvx` command:
 
 ```bash
-uvx --env-file /path/to/.env mcp-metricflow
+uvx --env-file /path/to/.env --with "mcp-metricflow[snowflake]" mcp-metricflow
+```
 
+Sample `.env` file:
+
+```bash
+DBT_PROJECT_DIR=/Users/xxx/sources/jaffle-shop
+DBT_PROFILES_DIR=/Users/xxx/.dbt
+MF_TMP_DIR=/Users/xxx/.dbt/tmp
 ```
 
 Add this configuration to the respective client's config file:
@@ -82,8 +88,8 @@ Add this configuration to the respective client's config file:
     "mcp-metricflow": {
       "command": "uvx",
       "args": [
-        "--env-file",
-        "<path-to-.env-file>",
+        "--env-file", "<path-to-.env-file>",
+        "--with", "mcp-metricflow[snowflake]",
         "mcp-metricflow"
       ]
     },
@@ -91,7 +97,11 @@ Add this configuration to the respective client's config file:
 }
 ```
 
-### SSE Mode
+> NOTE: Currently only support Snowflake with this extra dependency specified: `"--with", "mcp-metricflow[snowflake]"`
+
+> NOTE: We might have to use absolute path for example: `/Users/xxx/.local/bin/uvx` instead of `uvx` alone. Use `which uvx` to get the full path
+
+### SSE Mode 🚧
 
 For web-based integration or direct HTTP access:
 
@@ -192,6 +202,3 @@ Finally, super thanks to our *Contributors*:
 <a href="https://github.com/datnguye/mcp-metricflow/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=datnguye/mcp-metricflow" />
 </a>
-
-## TODO
-- Test STDIO mode
