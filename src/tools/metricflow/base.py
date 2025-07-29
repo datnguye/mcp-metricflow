@@ -37,13 +37,14 @@ def run_mf_command(command: list[str], config: MfCliConfig) -> tuple[str, str]:
     logger.info("=" * 60)
 
     # Set up environment with DBT_PROFILES_DIR
-    env = os.environ.copy()
-    env["DBT_PROFILES_DIR"] = config.profiles_dir
+    mf_env = os.environ.copy()
+    mf_env["DBT_PROFILES_DIR"] = config.profiles_dir
+    logger.debug(mf_env)
 
     process = subprocess.Popen(  # nosec B603
         args=[config.mf_path, *full_command],
         cwd=config.project_dir,
-        env=env,
+        env=mf_env,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
