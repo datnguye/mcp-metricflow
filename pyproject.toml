@@ -17,13 +17,15 @@ dependencies = [
 mcp-metricflow = "main.main_stdio:main"
 
 [project.optional-dependencies]
+snowflake = [
+    "dbt-snowflake>=1.8.0",
+]
 dev = [
     "black>=25.1.0",
     "ruff>=0.11.0,<=0.11.10",
     "bandit>=1.8.3",
     "pre-commit>=4.2.0",
     "poethepoet>=0.34.0",
-    "dbt-snowflake>=1.8.0",
 ]
 test = [
     "pytest>=8.0.0",
